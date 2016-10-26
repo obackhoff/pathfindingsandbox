@@ -1,5 +1,6 @@
 from tkinter import *
 import random
+import time
 
 class ImageImport():
     def __init__(self):
@@ -136,10 +137,14 @@ class CellGrid(Canvas):
             if not v.fill:
                 v._switch()
             v.draw("pink")
+            self.update()
+            time.sleep(0.00015)
         for p in path:
             if not p.fill:
                 p._switch()
             p.draw("green")
+            self.update()
+            time.sleep(0.00015)
 
         cell = self.grid[self.START[0]][self.START[1]]
         cell.draw("blue")
@@ -312,8 +317,8 @@ if __name__ == "__main__" :
 
     
 
-    #grid = CellGrid(app, 50, 50, 20)
-    grid = ImageGrid(app, 20, "img2.ppm")
+    # grid = CellGrid(app, 50, 50, 20)
+    grid = ImageGrid(app, 20, "img2j.ppm")
     grid.setSearch(DumbSearch)
     grid.pack()
 
