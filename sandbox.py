@@ -245,8 +245,25 @@ class DumbSearch():
                 done = True
                 print("DONE")
             cnt += 1
-
+        # print(len(path))
+        path = self.cleanPath(path)
+        # print(len(path))
         return visited, path
+
+    def cleanPath(self, path):
+        arr = []
+        tempIDX = 0
+        i = 0
+        while i < len(path):
+            tempIDX = i
+            for j in range(len(path[i+1:])):
+                if path[i] == path[i+1:][j]:
+                    tempIDX = i + j + 1
+            i = tempIDX
+            arr.append(path[i])
+            i += 1
+        return arr
+
 
 
     def getObstacles(self):
