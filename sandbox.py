@@ -217,7 +217,6 @@ class ImageGrid(CellGrid):
                 i += 3
 
 
-
 if __name__ == "__main__" :
     app = Tk()
 
@@ -225,7 +224,7 @@ if __name__ == "__main__" :
 
     # grid = CellGrid(app, 50, 50, 20)
     grid = ImageGrid(app, 20, "img4.ppm")
-    grid.setSearch(DumbSearch2)
+    grid.setSearch(DumbSearch)
     grid.pack()
 
     app.mainloop()
