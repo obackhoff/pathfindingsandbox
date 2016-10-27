@@ -223,7 +223,7 @@ if __name__ == "__main__" :
     
 
     # grid = CellGrid(app, 50, 50, 20)
-    grid = ImageGrid(app, 20, "img4.ppm")
+    grid = ImageGrid(app, 20, "img5.ppm")
     grid.setSearch(DumbSearch)
     grid.pack()
 
