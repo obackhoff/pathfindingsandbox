@@ -231,7 +231,7 @@ class DumbSearch():
         path = [start]
 
         cnt = 0
-
+        tic = time.clock()
         while(not done):
             dist = 99999999
             tempN = start
@@ -241,6 +241,10 @@ class DumbSearch():
                 if d <= dist  and n not in notAgain:
                     dist = d
                     tempN = n
+                    # if d == dist:
+                    #     if random.randint(0,1): tempN = n
+                    # else:
+                    #     tempN = n
             if tempN in path:
                 notAgain.append(path[len(path) - 1])
                 tempN = random.sample(self.getNeighbors(path[len(path)-1]),1)[0]
@@ -251,7 +255,15 @@ class DumbSearch():
                 print("DONE")
             cnt += 1
         # print(len(path))
+        toc = time.clock()
+        print("time elapsed (run) = " + str(toc-tic))
+
+        print("path before = " + str(len(path)))
+        tic = time.clock()
         path = self.cleanPath(path)
+        toc = time.clock()
+        print("time elapsed (clean) = " + str(toc-tic))
+        print("path clean = " + str(len(path)))
         # print(len(path))
         return visited, path
 
@@ -318,7 +330,7 @@ if __name__ == "__main__" :
     
 
     # grid = CellGrid(app, 50, 50, 20)
-    grid = ImageGrid(app, 20, "img2j.ppm")
+    grid = ImageGrid(app, 20, "img4.ppm")
     grid.setSearch(DumbSearch)
     grid.pack()
 
