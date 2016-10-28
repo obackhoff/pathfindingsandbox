@@ -155,7 +155,7 @@ class DumbSearch(SearchTools):
     def run(self):
         start = self.canvas.grid[self.canvas.START[0]][self.canvas.START[1]]
         goal = self.canvas.grid[self.canvas.GOAL[0]][self.canvas.GOAL[1]]
-        visited = []
+        visited = set()
         notAgain = []
         path = [start]
 
@@ -164,9 +164,10 @@ class DumbSearch(SearchTools):
         while True:
             dist = 99999999
             tempN = start
-            for n in self.getNeighbours(path[len(path) - 1]):
+            neighbours = self.getNeighbours(path[len(path) - 1])
+            for n in neighbours:
                 d = self.sqDistance(n, goal)
-                visited.append(n)
+                visited.add(n)
                 if d <= dist and n not in notAgain:
                     dist = d
                     tempN = n
@@ -175,9 +176,8 @@ class DumbSearch(SearchTools):
                     # else:
                     #     tempN = n
             if tempN in path:
-                notAgain.append(path[len(path) - 1])
-                tempN = random.sample(
-                    self.getNeighbours(path[len(path) - 1]), 1)[0]
+                notAgain.append(path[len(path) - 1]) 
+                tempN = random.sample(neighbours, 1)[0]
             path.append(tempN)
             #print("path= "+str(tempN.abs)+","+str(tempN.ord))
             if tempN.abs == goal.abs and tempN.ord == goal.ord:
@@ -196,7 +196,7 @@ class DumbSearch(SearchTools):
         print("path clean = " + str(len(path)))
         # print(len(visited))
         # print(len(set(visited)))
-        return set(visited), path
+        return visited, path
 
     def cleanPath(self, path):
         arr = []
@@ -266,7 +266,7 @@ class DumbSearch2(DumbSearch):
     def run(self):
         start = self.canvas.grid[self.canvas.START[0]][self.canvas.START[1]]
         goal = self.canvas.grid[self.canvas.GOAL[0]][self.canvas.GOAL[1]]
-        visited = []
+        visited = set()
         notAgain = []
         path = [start]
 
@@ -275,21 +275,29 @@ class DumbSearch2(DumbSearch):
         while True:
             dist = 99999999
             tempN = start
-            for n in self.getNeighbours(path[len(path) - 1]):
+            neighbours = self.getNeighbours(path[len(path) - 1])
+            for n in neighbours:
                 d = self.sqDistance(n, goal)
-                visited.append(n)
+                visited.add(n)
                 if d <= dist and n not in notAgain:
                     dist = d
-                    # tempN = n
-                    if d == dist:
-                        if random.randint(0, 1):
-                            tempN = n
-                    else:
-                        tempN = n
+                    tempN = n
+                    # if d == dist:
+                    #     if random.randint(0, 1):
+                    #         tempN = n
+                    # else:
+                    #     tempN = n
             if tempN in path:
                 notAgain.append(path[len(path) - 1])
-                tempN = random.sample(
-                    self.getNeighbours(path[len(path) - 1]), 1)[0]
+                tempArr = random.sample(neighbours, int(len(neighbours)/2))
+                for t in tempArr:
+                    dist = 99999999
+                    d = self.sqDistance(t, goal)
+                    if d <= dist:
+                        dist = d
+                        tempN = t
+
+
             path.append(tempN)
             # print("path= " + str(tempN.abs) + "," + str(tempN.ord))
             if tempN.abs == goal.abs and tempN.ord == goal.ord:
@@ -307,7 +315,7 @@ class DumbSearch2(DumbSearch):
         print("time elapsed (clean) = " + str(toc - tic))
         print("path clean = " + str(len(path)))
         # print(len(path))
-        return set(visited), path
+        return visited, path
 
 class DumbSearch8N(DumbSearch):
     NAME = "Dumb Search with 8 Neighbours"

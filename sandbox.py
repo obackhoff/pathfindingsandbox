@@ -253,9 +253,9 @@ if __name__ == "__main__":
     app = Tk()
 
     # grid = CellGrid(app, 50, 50, 20)
-    grid = ImageGrid(app, 9, "maze2.ppm")
-    grid.setSearch(DumbSearch8N)
-    # grid.setSearch(AStar)
+    grid = ImageGrid(app, 9, "maze.ppm")
+    # grid.setSearch(DumbSearch2)
+    grid.setSearch(AStar)
     grid.pack()
 
     app.mainloop()
