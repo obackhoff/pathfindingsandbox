@@ -77,6 +77,7 @@ class AStar():
                         openSet.append(n)
 
         path = self.getCellsPath(self.retracePath(startNode, goalNode))
+        print("path lenght = " + str(len(path)))
         visited = self.getCellsPath(visited)
 
         toc = time.clock()
@@ -310,8 +311,8 @@ class DumbSearch2(DumbSearch):
         # print(len(path))
         return visited, path
 
-class DumbSearch6N(DumbSearch):
-    NAME = "Dumb Search with 6 Neighbours"
+class DumbSearch8N(DumbSearch):
+    NAME = "Dumb Search with 8 Neighbours"
     MODE = ""
     canvas = None
 

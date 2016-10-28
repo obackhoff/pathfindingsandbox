@@ -38,7 +38,7 @@ class Cell():
         """ order to the cell to draw its representation on the canvas """
         if self.master != None:
             fill = color
-            outline = color
+            outline = "black"
             self.color = color
 
             if not self.fill:
@@ -254,8 +254,8 @@ if __name__ == "__main__":
 
     # grid = CellGrid(app, 50, 50, 20)
     grid = ImageGrid(app, 9, "maze2.ppm")
-    grid.setSearch(DumbSearch)
-    # grid.setSearch(AStar)
+    # grid.setSearch(DumbSearch8N)
+    grid.setSearch(AStar)
     grid.pack()
 
     app.mainloop()
