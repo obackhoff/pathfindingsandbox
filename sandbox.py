@@ -252,8 +252,8 @@ class ImageGrid(CellGrid):
 if __name__ == "__main__":
     app = Tk()
 
-    grid = CellGrid(app, 50, 50, 20)
-    # grid = ImageGrid(app, 20, "img3.ppm")
+    # grid = CellGrid(app, 50, 50, 20)
+    grid = ImageGrid(app, 9, "maze2.ppm")
     grid.setSearch(DumbSearch)
     # grid.setSearch(AStar)
     grid.pack()
