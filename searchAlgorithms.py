@@ -7,6 +7,7 @@ class DumbSearch():
     NAME = "Dumb Search"
     MODE = ""
     canvas = None
+
     def __init__(self, canvas):
         self.MODE = "NODIAG"
         self.canvas = canvas
@@ -27,7 +28,7 @@ class DumbSearch():
             for n in self.getNeighbors(path[len(path) - 1]):
                 d = self.sqDistance(n, goal)
                 visited.append(n)
-                if d <= dist  and n not in notAgain:
+                if d <= dist and n not in notAgain:
                     dist = d
                     tempN = n
                     # if d == dist:
@@ -36,22 +37,23 @@ class DumbSearch():
                     #     tempN = n
             if tempN in path:
                 notAgain.append(path[len(path) - 1])
-                tempN = random.sample(self.getNeighbors(path[len(path)-1]),1)[0]
+                tempN = random.sample(
+                    self.getNeighbors(path[len(path) - 1]), 1)[0]
             path.append(tempN)
-            print("path= "+str(tempN.abs)+","+str(tempN.ord))
+            #print("path= "+str(tempN.abs)+","+str(tempN.ord))
             if tempN.abs == goal.abs and tempN.ord == goal.ord:
                 done = True
                 print("DONE")
             cnt += 1
         # print(len(path))
         toc = time.clock()
-        print("time elapsed (run) = " + str(toc-tic))
+        print("time elapsed (run) = " + str(toc - tic))
 
         print("path before = " + str(len(path)))
         tic = time.clock()
         path = self.cleanPath(path)
         toc = time.clock()
-        print("time elapsed (clean) = " + str(toc-tic))
+        print("time elapsed (clean) = " + str(toc - tic))
         print("path clean = " + str(len(path)))
         # print(len(path))
         return visited, path
@@ -62,15 +64,13 @@ class DumbSearch():
         i = 0
         while i < len(path):
             tempIDX = i
-            for j in range(len(path[i+1:])):
-                if path[i] == path[i+1:][j]:
+            for j in range(len(path[i + 1:])):
+                if path[i] == path[i + 1:][j]:
                     tempIDX = i + j + 1
             i = tempIDX
             arr.append(path[i])
             i += 1
         return arr
-
-
 
     def getObstacles(self):
         arr = []
@@ -91,7 +91,7 @@ class DumbSearch():
         yA = pointA.ord
         xB = pointB.abs
         yB = pointB.ord
-        return (xA- xB) * (xA- xB) + (yA - yB) * (yA - yB)
+        return (xA - xB) * (xA - xB) + (yA - yB) * (yA - yB)
 
     def getNeighbors(self, point):
         arr = []
@@ -103,21 +103,22 @@ class DumbSearch():
         obstacles = self.getObstacles()
 
         if self.MODE == "NODIAG":
-            if x + 1 < xmax and self.isNotObstacle(obstacles, self.canvas.grid[y][x+1]):
-                 arr.append(self.canvas.grid[y][x+1])
-            if x - 1 >= 0 and self.isNotObstacle(obstacles, self.canvas.grid[y][x-1]):
-                 arr.append(self.canvas.grid[y][x-1])
-            if y - 1 >= 0 and self.isNotObstacle(obstacles, self.canvas.grid[y-1][x]):
-                 arr.append(self.canvas.grid[y-1][x])
-            if y + 1 < ymax and self.isNotObstacle(obstacles, self.canvas.grid[y+1][x]):
-                 arr.append(self.canvas.grid[y+1][x])
+            if x + 1 < xmax and self.isNotObstacle(obstacles, self.canvas.grid[y][x + 1]):
+                arr.append(self.canvas.grid[y][x + 1])
+            if x - 1 >= 0 and self.isNotObstacle(obstacles, self.canvas.grid[y][x - 1]):
+                arr.append(self.canvas.grid[y][x - 1])
+            if y - 1 >= 0 and self.isNotObstacle(obstacles, self.canvas.grid[y - 1][x]):
+                arr.append(self.canvas.grid[y - 1][x])
+            if y + 1 < ymax and self.isNotObstacle(obstacles, self.canvas.grid[y + 1][x]):
+                arr.append(self.canvas.grid[y + 1][x])
         return arr
 
 
 class DumbSearch2(DumbSearch):
-    NAME = "Dumb Search"
+    NAME = "Dumb Search Experiments"
     MODE = ""
     canvas = None
+
     def __init__(self, canvas):
         self.MODE = "NODIAG"
         self.canvas = canvas
@@ -138,31 +139,33 @@ class DumbSearch2(DumbSearch):
             for n in self.getNeighbors(path[len(path) - 1]):
                 d = self.sqDistance(n, goal)
                 visited.append(n)
-                if d <= dist  and n not in notAgain:
+                if d <= dist and n not in notAgain:
                     dist = d
                     # tempN = n
                     if d == dist:
-                        if random.randint(0,1): tempN = n
+                        if random.randint(0, 1):
+                            tempN = n
                     else:
                         tempN = n
             if tempN in path:
                 notAgain.append(path[len(path) - 1])
-                tempN = random.sample(self.getNeighbors(path[len(path)-1]),1)[0]
+                tempN = random.sample(
+                    self.getNeighbors(path[len(path) - 1]), 1)[0]
             path.append(tempN)
-            print("path= "+str(tempN.abs)+","+str(tempN.ord))
+            # print("path= " + str(tempN.abs) + "," + str(tempN.ord))
             if tempN.abs == goal.abs and tempN.ord == goal.ord:
                 done = True
                 print("DONE")
             cnt += 1
         # print(len(path))
         toc = time.clock()
-        print("time elapsed (run) = " + str(toc-tic))
+        print("time elapsed (run) = " + str(toc - tic))
 
         print("path before = " + str(len(path)))
         tic = time.clock()
         path = self.cleanPath(path)
         toc = time.clock()
-        print("time elapsed (clean) = " + str(toc-tic))
+        print("time elapsed (clean) = " + str(toc - tic))
         print("path clean = " + str(len(path)))
         # print(len(path))
         return visited, path
