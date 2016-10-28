@@ -1,0 +1,12 @@
+class NameOfAlgorithm():
+    NAME = "Name"
+    canvas = None
+
+    def __init__(self, canvas):
+        self.canvas = canvas 
+    
+    def run(self):
+        visited = []
+        path = []
+
+        return visited, path  
