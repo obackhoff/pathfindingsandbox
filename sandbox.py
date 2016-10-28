@@ -149,7 +149,6 @@ class CellGrid(Canvas):
             print("cleaned")
             self.cleanGrid()
             self.dirty = False
-            pass
         else:
             print(self.SEARCH.NAME + " ... processing")
             visited, path = self.SEARCH.run()
