@@ -143,7 +143,6 @@ class AStar():
             return 14 * distY + 10 * (distX - distY)
         return 14 * distX + 10 * (distY - distX)
 
-
 class DumbSearch(SearchTools):
     NAME = "Dumb Search"
     MODE = ""
@@ -154,7 +153,6 @@ class DumbSearch(SearchTools):
         self.canvas = canvas
 
     def run(self):
-        done = False
         start = self.canvas.grid[self.canvas.START[0]][self.canvas.START[1]]
         goal = self.canvas.grid[self.canvas.GOAL[0]][self.canvas.GOAL[1]]
         visited = []
@@ -163,7 +161,7 @@ class DumbSearch(SearchTools):
 
         cnt = 0
         tic = time.clock()
-        while(not done):
+        while True:
             dist = 99999999
             tempN = start
             for n in self.getNeighbours(path[len(path) - 1]):
@@ -183,8 +181,8 @@ class DumbSearch(SearchTools):
             path.append(tempN)
             #print("path= "+str(tempN.abs)+","+str(tempN.ord))
             if tempN.abs == goal.abs and tempN.ord == goal.ord:
-                done = True
                 print("DONE")
+                break
             cnt += 1
         # print(len(path))
         toc = time.clock()
@@ -196,17 +194,19 @@ class DumbSearch(SearchTools):
         toc = time.clock()
         print("time elapsed (clean) = " + str(toc - tic))
         print("path clean = " + str(len(path)))
-        # print(len(path))
-        return visited, path
+        # print(len(visited))
+        # print(len(set(visited)))
+        return set(visited), path
 
     def cleanPath(self, path):
         arr = []
         tempIDX = 0
         i = 0
-        while i < len(path):
+        length = len(path)
+        while i < length:
             tempIDX = i
-            for j in range(len(path[i + 1:])):
-                if path[i] == path[i + 1:][j]:
+            for j in range(length - i - 1):
+                if path[i] == path[i + j + 1]:
                     tempIDX = i + j + 1
             i = tempIDX
             arr.append(path[i])
@@ -254,7 +254,6 @@ class DumbSearch(SearchTools):
                 arr.append(self.canvas.grid[y + 1][x])
         return arr
 
-
 class DumbSearch2(DumbSearch):
     NAME = "Dumb Search Experiments"
     MODE = ""
@@ -265,7 +264,6 @@ class DumbSearch2(DumbSearch):
         self.canvas = canvas
 
     def run(self):
-        done = False
         start = self.canvas.grid[self.canvas.START[0]][self.canvas.START[1]]
         goal = self.canvas.grid[self.canvas.GOAL[0]][self.canvas.GOAL[1]]
         visited = []
@@ -274,7 +272,7 @@ class DumbSearch2(DumbSearch):
 
         cnt = 0
         tic = time.clock()
-        while(not done):
+        while True:
             dist = 99999999
             tempN = start
             for n in self.getNeighbours(path[len(path) - 1]):
@@ -295,8 +293,8 @@ class DumbSearch2(DumbSearch):
             path.append(tempN)
             # print("path= " + str(tempN.abs) + "," + str(tempN.ord))
             if tempN.abs == goal.abs and tempN.ord == goal.ord:
-                done = True
                 print("DONE")
+                break
             cnt += 1
         # print(len(path))
         toc = time.clock()
@@ -309,7 +307,7 @@ class DumbSearch2(DumbSearch):
         print("time elapsed (clean) = " + str(toc - tic))
         print("path clean = " + str(len(path)))
         # print(len(path))
-        return visited, path
+        return set(visited), path
 
 class DumbSearch8N(DumbSearch):
     NAME = "Dumb Search with 8 Neighbours"

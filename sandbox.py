@@ -154,7 +154,7 @@ class CellGrid(Canvas):
             print(self.SEARCH.NAME + " ... processing")
             visited, path = self.SEARCH.run()
             for v in visited:
-                if not v.fill:
+                if not v.fill and v.color != "pink":
                     v._switch()
                 v.draw("pink")
                 # self.update()
@@ -254,8 +254,8 @@ if __name__ == "__main__":
 
     # grid = CellGrid(app, 50, 50, 20)
     grid = ImageGrid(app, 9, "maze2.ppm")
-    # grid.setSearch(DumbSearch8N)
-    grid.setSearch(AStar)
+    grid.setSearch(DumbSearch8N)
+    # grid.setSearch(AStar)
     grid.pack()
 
     app.mainloop()
