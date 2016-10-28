@@ -61,7 +61,7 @@ class AStar():
                 print("DONE")
                 break
 
-            print("current = " + str(currentNode.x) + ", " + str(currentNode.y) + "; goal = " + str(goalNode.x) + ", " + str(goalNode.y))
+            #print("current = " + str(currentNode.x) + ", " + str(currentNode.y) + "; goal = " + str(goalNode.x) + ", " + str(goalNode.y))
             for n in self.getNeighbours(grid, currentNode):
                 if not n.walkable or n in closedSet:
                     continue

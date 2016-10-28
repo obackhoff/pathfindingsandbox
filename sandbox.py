@@ -2,6 +2,7 @@ from tkinter import *
 import random
 import time
 from searchAlgorithms import *
+import os
 
 
 class ImageImport():
@@ -19,6 +20,7 @@ class ImageImport():
 class Cell():
     EMPTY_COLOR_BG = "white"
     EMPTY_COLOR_BORDER = "black"
+    color = ""
 
     def __init__(self, master, x, y, size):
         """ Constructor of the object called by Cell(...) """
@@ -37,6 +39,7 @@ class Cell():
         if self.master != None:
             fill = color
             outline = color
+            self.color = color
 
             if not self.fill:
                 fill = Cell.EMPTY_COLOR_BG
@@ -55,6 +58,7 @@ class CellGrid(Canvas):
     START = [0, 0]
     GOAL = [0, 0]
     SEARCH = None
+    dirty = False
 
     def __init__(self, master, rowNumber, columnNumber, cellSize, *args, **kwargs):
 
@@ -138,27 +142,45 @@ class CellGrid(Canvas):
             cell.draw("black")
             self.switched.append(cell)
 
+
     def handleEnter(self, event):
-        print(self.SEARCH.NAME + " ... processing")
-        visited, path = self.SEARCH.run()
-        for v in visited:
-            if not v.fill:
-                v._switch()
-            v.draw("pink")
-            # self.update()
-            # time.sleep(0.00015)
-        for p in path:
-            if not p.fill:
-                p._switch()
-            p.draw("green")
-            # self.update()
-            # time.sleep(0.00015)
 
-        cell = self.grid[self.START[0]][self.START[1]]
-        cell.draw("blue")
+        if self.dirty:
+            print("cleaned")
+            self.cleanGrid()
+            self.dirty = False
+            pass
+        else:
+            print(self.SEARCH.NAME + " ... processing")
+            visited, path = self.SEARCH.run()
+            for v in visited:
+                if not v.fill:
+                    v._switch()
+                v.draw("pink")
+                # self.update()
+                # time.sleep(0.00015)
+            for p in path:
+                if not p.fill:
+                    p._switch()
+                p.draw("green")
+                # self.update()
+                # time.sleep(0.00015)
 
-        cell = self.grid[self.GOAL[0]][self.GOAL[1]]
-        cell.draw("red")
+            cell = self.grid[self.START[0]][self.START[1]]
+            cell.draw("blue")
+
+            cell = self.grid[self.GOAL[0]][self.GOAL[1]]
+            cell.draw("red")
+
+            self.dirty = True
+
+    def cleanGrid(self):
+        for row in self.grid:
+            for cell in row:
+                if cell.color != "black" and cell.fill and self.isNotStartGoal(cell):
+                    cell.fill = False
+                    cell.draw("black")
+
 
     def setSearch(self, search):
         self.SEARCH = search(self)
@@ -230,9 +252,10 @@ class ImageGrid(CellGrid):
 if __name__ == "__main__":
     app = Tk()
 
-    # grid = CellGrid(app, 50, 50, 20)
-    grid = ImageGrid(app, 20, "img5.ppm")
-    grid.setSearch(DumbSearch6N)
+    grid = CellGrid(app, 50, 50, 20)
+    # grid = ImageGrid(app, 20, "img3.ppm")
+    grid.setSearch(DumbSearch)
+    # grid.setSearch(AStar)
     grid.pack()
 
     app.mainloop()
