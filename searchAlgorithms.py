@@ -3,6 +3,7 @@ import random
 import time
 from node import *
 
+
 class SearchTools():
 
     def getObstacles(slef, canvas):
@@ -19,12 +20,14 @@ class SearchTools():
                 return False
         return True
 
+
 class AStar():
     NAME = "A*"
     canvas = None
 
     def __init__(self, canvas):
-        self.canvas = canvas 
+        self.canvas = canvas
+
     
     def run(self):
 
@@ -34,19 +37,19 @@ class AStar():
         path = []
 
         openSet = []
-        closedSet =[]
+        closedSet = []
 
         grid = self.createGrid(self.canvas)
 
-        startNode = Node(self.canvas.grid[self.canvas.START[0]][self.canvas.START[1]], True, self.canvas.START[0],self.canvas.START[1])
-        goalNode = Node(self.canvas.grid[self.canvas.GOAL[0]][self.canvas.GOAL[1]], True, self.canvas.GOAL[0],self.canvas.GOAL[1])
+        startNode = Node(self.canvas.grid[self.canvas.START[0]][self.canvas.START[
+                         1]], True, self.canvas.START[0], self.canvas.START[1])
+        goalNode = Node(self.canvas.grid[self.canvas.GOAL[0]][self.canvas.GOAL[
+                        1]], True, self.canvas.GOAL[0], self.canvas.GOAL[1])
 
         grid[startNode.x][startNode.y] = startNode
         grid[goalNode.x][goalNode.y] = goalNode
 
         openSet.append(grid[startNode.x][startNode.y])
-
-
 
         while(len(openSet) > 0):
             currentNode = openSet[0]
@@ -66,7 +69,8 @@ class AStar():
                 if not n.walkable or n in closedSet:
                     continue
 
-                newMovCostToNeighbour = currentNode.gCost + self.getDistance(currentNode, n)
+                newMovCostToNeighbour = currentNode.gCost + \
+                    self.getDistance(currentNode, n)
                 if newMovCostToNeighbour < n.gCost or n not in openSet:
                     visited.append(n)
                     n.gCost = newMovCostToNeighbour
@@ -83,8 +87,7 @@ class AStar():
         toc = time.clock()
         print("time elapsed (run) = " + str(toc - tic))
 
-        return visited, path 
-
+        return visited, path
 
     def createGrid(self, canvas):
         grid = []
@@ -123,15 +126,15 @@ class AStar():
         xmax = len(self.canvas.grid)
         ymax = len(self.canvas.grid[0])
 
-        for x in range(-1,2):
-            for y in range(-1,2):
+        for x in range(-1, 2):
+            for y in range(-1, 2):
                 if x == 0 and y == 0:
                     continue
 
                 checkX = node.x + x
                 checkY = node.y + y
 
-                if checkX >= 0 and checkX < xmax and checkY >=0 and checkY < ymax:
+                if checkX >= 0 and checkX < xmax and checkY >= 0 and checkY < ymax:
                     neighbours.append(grid[checkX][checkY])
         return neighbours
 
@@ -142,6 +145,7 @@ class AStar():
         if distX > distY:
             return 14 * distY + 10 * (distX - distY)
         return 14 * distX + 10 * (distY - distX)
+
 
 class DumbSearch(SearchTools):
     NAME = "Dumb Search"
@@ -176,7 +180,7 @@ class DumbSearch(SearchTools):
                     # else:
                     #     tempN = n
             if tempN in path:
-                notAgain.append(path[len(path) - 1]) 
+                notAgain.append(path[len(path) - 1])
                 tempN = random.sample(neighbours, 1)[0]
             path.append(tempN)
             #print("path= "+str(tempN.abs)+","+str(tempN.ord))
@@ -254,6 +258,7 @@ class DumbSearch(SearchTools):
                 arr.append(self.canvas.grid[y + 1][x])
         return arr
 
+
 class DumbSearch2(DumbSearch):
     NAME = "Dumb Search Experiments"
     MODE = ""
@@ -289,14 +294,13 @@ class DumbSearch2(DumbSearch):
                     #     tempN = n
             if tempN in path:
                 notAgain.append(path[len(path) - 1])
-                tempArr = random.sample(neighbours, int(len(neighbours)/2))
+                tempArr = random.sample(neighbours, int(len(neighbours) / 2))
                 for t in tempArr:
                     dist = 99999999
                     d = self.sqDistance(t, goal)
                     if d <= dist:
                         dist = d
                         tempN = t
-
 
             path.append(tempN)
             # print("path= " + str(tempN.abs) + "," + str(tempN.ord))
@@ -317,6 +321,7 @@ class DumbSearch2(DumbSearch):
         # print(len(path))
         return visited, path
 
+
 class DumbSearch8N(DumbSearch):
     NAME = "Dumb Search with 8 Neighbours"
     MODE = ""
@@ -332,17 +337,15 @@ class DumbSearch8N(DumbSearch):
         ymax = len(self.canvas.grid[0])
         obstacles = self.getObstacles()
 
-        for x in range(-1,2):
-            for y in range(-1,2):
+        for x in range(-1, 2):
+            for y in range(-1, 2):
                 if x == 0 and y == 0:
                     continue
 
                 checkX = point.ord + x
                 checkY = point.abs + y
 
-                if checkX >= 0 and checkX < xmax and checkY >=0 and checkY < ymax:
+                if checkX >= 0 and checkX < xmax and checkY >= 0 and checkY < ymax:
                     if self.canvas.grid[checkX][checkY] not in obstacles:
                         neighbours.append(self.canvas.grid[checkX][checkY])
         return neighbours
-
-

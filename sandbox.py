@@ -142,7 +142,6 @@ class CellGrid(Canvas):
             cell.draw("black")
             self.switched.append(cell)
 
-
     def handleEnter(self, event):
 
         if self.dirty:
@@ -179,7 +178,6 @@ class CellGrid(Canvas):
                 if cell.color != "black" and cell.fill and self.isNotStartGoal(cell):
                     cell.fill = False
                     cell.draw("black")
-
 
     def setSearch(self, search):
         self.SEARCH = search(self)
@@ -252,8 +250,8 @@ if __name__ == "__main__":
     app = Tk()
 
     # grid = CellGrid(app, 50, 50, 20)
-    grid = ImageGrid(app, 9, "maze.ppm")
-    # grid.setSearch(DumbSearch2)
+    grid = ImageGrid(app, 20, "img2.ppm")
+    # grid.setSearch(DumbSearch)
     grid.setSearch(AStar)
     grid.pack()
 
