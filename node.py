@@ -6,6 +6,8 @@ class Node():
 	hCost = 0
 	cell = None
 	parent = None
+	isInOpenSet = False
+	isInClosedSet = False
 
 	def __init__(self, cell, walkable, x, y):
 		self.x = x

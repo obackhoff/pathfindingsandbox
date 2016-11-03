@@ -2,6 +2,7 @@ from tkinter import *
 import random
 import time
 from node import *
+from sebsheap import *
 
 class SearchTools():
 
@@ -24,8 +25,8 @@ class AStar():
     canvas = None
 
     def __init__(self, canvas):
-        self.canvas = canvas 
-    
+        self.canvas = canvas
+
     def run(self):
 
         tic = time.clock()
@@ -83,7 +84,7 @@ class AStar():
         toc = time.clock()
         print("time elapsed (run) = " + str(toc - tic))
 
-        return visited, path 
+        return visited, path
 
 
     def createGrid(self, canvas):
@@ -176,7 +177,7 @@ class DumbSearch(SearchTools):
                     # else:
                     #     tempN = n
             if tempN in path:
-                notAgain.append(path[len(path) - 1]) 
+                notAgain.append(path[len(path) - 1])
                 tempN = random.sample(neighbours, 1)[0]
             path.append(tempN)
             #print("path= "+str(tempN.abs)+","+str(tempN.ord))
@@ -345,4 +346,131 @@ class DumbSearch8N(DumbSearch):
                         neighbours.append(self.canvas.grid[checkX][checkY])
         return neighbours
 
+class AStarHeap(AStar):
+    NAME = "A*Heap"
 
+    def run(self):
+
+        tic = time.clock()
+
+        visited = []
+        path = []
+
+        openSet = ListObjectHeap()
+        nodeObjectToHeapObject = {}
+
+        grid = self.createGrid(self.canvas)
+
+        startNode = Node(self.canvas.grid[self.canvas.START[0]][self.canvas.START[1]], True, self.canvas.START[0],self.canvas.START[1])
+        goalNode = Node(self.canvas.grid[self.canvas.GOAL[0]][self.canvas.GOAL[1]], True, self.canvas.GOAL[0],self.canvas.GOAL[1])
+
+        grid[startNode.x][startNode.y] = startNode
+        grid[goalNode.x][goalNode.y] = goalNode
+
+        startNodeHeapObject = NodeObjectWrapper(startNode)
+        startNode.isInOpenSet = True
+        openSet.push(startNodeHeapObject)
+        nodeObjectToHeapObject[startNode] = startNodeHeapObject
+
+        while not openSet.checkIfEmpty():
+            currentNode = openSet.pop().getNodeObject()
+            currentNode.isInOpenSet = False
+            del nodeObjectToHeapObject[currentNode]
+            currentNode.isInClosedSet = True
+
+            if (currentNode == goalNode):
+                print("DONE")
+                break
+
+            #print("current = " + str(currentNode.x) + ", " + str(currentNode.y) + "; goal = " + str(goalNode.x) + ", " + str(goalNode.y))
+            for n in self.getNeighbours(grid, currentNode):
+                if not n.walkable or n.isInClosedSet:
+                    continue
+
+                newMovCostToNeighbour = currentNode.gCost + self.getDistance(currentNode, n)
+                if newMovCostToNeighbour < n.gCost or not n.isInOpenSet:
+                    visited.append(n)
+                    n.gCost = newMovCostToNeighbour
+                    n.hCost = self.getDistance(n, goalNode)
+                    n.setParent(currentNode)
+
+
+                    if n.isInOpenSet:
+                        openSet.updateHeap(nodeObjectToHeapObject[n].index)
+                    else:
+                        n.isInOpenSet = True
+                        addNodeHeapObject = NodeObjectWrapper(n)
+                        openSet.push(addNodeHeapObject)
+                        nodeObjectToHeapObject[n] = addNodeHeapObject
+
+        path = self.getCellsPath(self.retracePath(startNode, goalNode))
+        print("path lenght = " + str(len(path)))
+        visited = self.getCellsPath(visited)
+
+        toc = time.clock()
+        print("time elapsed (run) = " + str(toc - tic))
+
+        return visited, path
+
+class AStarNoLists(AStar):
+    NAME = "A*NoLists"
+
+    def run(self):
+
+        tic = time.clock()
+
+        visited = []
+        path = []
+
+        openSet = []
+
+        grid = self.createGrid(self.canvas)
+
+        startNode = Node(self.canvas.grid[self.canvas.START[0]][self.canvas.START[1]], True, self.canvas.START[0],self.canvas.START[1])
+        goalNode = Node(self.canvas.grid[self.canvas.GOAL[0]][self.canvas.GOAL[1]], True, self.canvas.GOAL[0],self.canvas.GOAL[1])
+
+        grid[startNode.x][startNode.y] = startNode
+        grid[goalNode.x][goalNode.y] = goalNode
+
+        openSet.append(startNode)
+
+
+
+        while(len(openSet) > 0):
+            currentNode = openSet[0]
+            for o in openSet:
+                if o.fCost() < currentNode.fCost() or o.fCost() == currentNode.fCost() and o.hCost < currentNode.hCost:
+                    currentNode = o
+
+            openSet.remove(currentNode)
+            currentNode.isInOpenSet = False
+            currentNode.isInClosedSet = True
+
+            if (currentNode == goalNode):
+                print("DONE")
+                break
+
+            #print("current = " + str(currentNode.x) + ", " + str(currentNode.y) + "; goal = " + str(goalNode.x) + ", " + str(goalNode.y))
+            for n in self.getNeighbours(grid, currentNode):
+                if not n.walkable or n.isInClosedSet:
+                    continue
+
+                newMovCostToNeighbour = currentNode.gCost + self.getDistance(currentNode, n)
+                if newMovCostToNeighbour < n.gCost or not n.isInOpenSet:
+                    visited.append(n)
+                    n.gCost = newMovCostToNeighbour
+                    n.hCost = self.getDistance(n, goalNode)
+                    n.setParent(currentNode)
+
+                    if not n.isInOpenSet:
+                        openSet.append(n)
+                        n.isInOpenSet = True
+
+        path = self.getCellsPath(self.retracePath(startNode, goalNode))
+        print("path lenght = " + str(len(path)))
+        visited = self.getCellsPath(visited)
+
+        toc = time.clock()
+        print("time elapsed (run) = " + str(toc - tic))
+
+        return visited, path

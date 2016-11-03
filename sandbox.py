@@ -251,10 +251,11 @@ class ImageGrid(CellGrid):
 if __name__ == "__main__":
     app = Tk()
 
-    # grid = CellGrid(app, 50, 50, 20)
-    grid = ImageGrid(app, 9, "maze.ppm")
-    # grid.setSearch(DumbSearch2)
-    grid.setSearch(AStar)
+    grid = CellGrid(app, 50, 50, 20)
+    # grid = ImageGrid(app, 9, "maze2.ppm")
+    # grid.setSearch(AStarHeap)
+    # grid.setSearch(AStar)
+    grid.setSearch(AStarNoLists)
     grid.pack()
 
     app.mainloop()
