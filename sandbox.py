@@ -22,13 +22,14 @@ class Cell():
     EMPTY_COLOR_BORDER = "black"
     color = ""
 
-    def __init__(self, master, x, y, size):
+    def __init__(self, master, x, y, size, draw):
         """ Constructor of the object called by Cell(...) """
         self.master = master
         self.abs = x
         self.ord = y
         self.size = size
         self.fill = False
+        self.drawCell = draw
 
     def _switch(self):
         """ Switch if the cell is OBSTACLE or not. """
@@ -50,8 +51,8 @@ class Cell():
             ymin = self.ord * self.size
             ymax = ymin + self.size
 
-            self.master.create_rectangle(
-                xmin, ymin, xmax, ymax, fill=fill, outline=outline)
+            if self.drawCell:
+                self.master.create_rectangle(xmin, ymin, xmax, ymax, fill=fill, outline=outline)
 
 
 class CellGrid(Canvas):
@@ -60,24 +61,25 @@ class CellGrid(Canvas):
     SEARCH = None
     dirty = False
 
-    def __init__(self, master, rowNumber, columnNumber, cellSize, *args, **kwargs):
+    def __init__(self, master, rowNumber, columnNumber, cellSize, draw=True, *args, **kwargs):
 
-        self.START[0] = int(0.2 * columnNumber)
-        self.START[1] = int(0.2 * columnNumber)
-        self.GOAL[0] = int(rowNumber - 0.2 * rowNumber)
-        self.GOAL[1] = int(rowNumber - 0.2 * rowNumber)
+        self.START[0] = int(0.1 * columnNumber)
+        self.START[1] = int(0.1 * columnNumber)
+        self.GOAL[0] = int(rowNumber - 0.1 * rowNumber)
+        self.GOAL[1] = int(rowNumber - 0.1 * rowNumber)
 
-        Canvas.__init__(self, master, width=cellSize * columnNumber,
-                        height=cellSize * rowNumber, *args, **kwargs)
+        if draw:
+            Canvas.__init__(self, master, width=cellSize * columnNumber,height=cellSize * rowNumber, *args, **kwargs)
+        else:
+            Canvas.__init__(self, master, width=400,height=400, *args, **kwargs)
 
         self.cellSize = cellSize
 
         self.grid = []
         for row in range(rowNumber):
-
             line = []
             for column in range(columnNumber):
-                line.append(Cell(self, column, row, cellSize))
+                line.append(Cell(self, column, row, cellSize, draw))
 
             self.grid.append(line)
 
@@ -142,6 +144,7 @@ class CellGrid(Canvas):
             cell.draw("black")
             self.switched.append(cell)
 
+
     def handleEnter(self, event):
 
         if self.dirty:
@@ -179,6 +182,7 @@ class CellGrid(Canvas):
                     cell.fill = False
                     cell.draw("black")
 
+
     def setSearch(self, search):
         self.SEARCH = search(self)
 
@@ -188,23 +192,25 @@ class ImageGrid(CellGrid):
     START = [0, 0]
     GOAL = [0, 0]
 
-    def __init__(self, master, cellSize, image, *args, **kwargs):
+    def __init__(self, master, cellSize, image, draw=True, *args, **kwargs):
         img, imgx, imgy = ImageImport(image)
 
         rowNumber = imgx
         columnNumber = imgy
 
-        Canvas.__init__(self, master, width=cellSize * columnNumber,
-                        height=cellSize * rowNumber, *args, **kwargs)
+        if draw:
+            Canvas.__init__(self, master, width=cellSize * columnNumber,height=cellSize * rowNumber, *args, **kwargs)
+        else:
+            Canvas.__init__(self, master, width=400,height=400, *args, **kwargs)
+
 
         self.cellSize = cellSize
 
         self.grid = []
         for row in range(rowNumber):
-
             line = []
             for column in range(columnNumber):
-                line.append(Cell(self, column, row, cellSize))
+                line.append(Cell(self, column, row, cellSize, draw))
 
             self.grid.append(line)
 
@@ -249,10 +255,13 @@ class ImageGrid(CellGrid):
 if __name__ == "__main__":
     app = Tk()
 
-    # grid = CellGrid(app, 50, 50, 20)
-    grid = ImageGrid(app, 20, "img2.ppm")
+    # grid = CellGrid(None, 3000, 3000, 3, draw=False)
+    grid = ImageGrid(None, 3, "maze3.ppm", draw=True)
+    # grid.setSearch(AStarHeap)
+    # grid.setSearch(AStar)
+    grid.setSearch(AStarNoLists)
     # grid.setSearch(DumbSearch)
-    grid.setSearch(AStar)
+
     grid.pack()
 
     app.mainloop()
